@@ -1,6 +1,5 @@
 MapsActivity.java
 
-
 package com.example.maps;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -32,7 +31,6 @@ public class MapsActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager()
                         .findFragmentById(R.id.map);
@@ -44,35 +42,35 @@ public class MapsActivity extends FragmentActivity implements
                         String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                 PackageManager.PERMISSION_GRANTED);
     }
-
     @Override
     public void onMapReady (GoogleMap googleMap){
         mMap = googleMap;
-
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new
+                MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location)
             {
-                latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.clear(); // Clear existing markers
-                mMap.addMarker(new MarkerOptions().position(latLng).title("My position"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                latLng = new
+                        LatLng(location.getLatitude(),location.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(latLng
+                ).title("My position"));
 
-                // Optional: Add this if you want to stop listening to location updates after getting one
-                locationManager.removeUpdates(locationListener);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         };
+        locationManager = (LocationManager)
+                getSystemService(LOCATION_SERVICE);
+        try{
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        try {
-            // Request location updates using GPS_PROVIDER
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DIST, locationListener);
-        } catch (SecurityException e) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME,MIN_DIST,locationListener);}
+        catch (SecurityException e){
             e.printStackTrace();
         }
     }
-
-
 }
 
 
