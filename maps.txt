@@ -1,3 +1,5 @@
+MapsActivity.java
+
 package com.example.maps;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -29,7 +31,6 @@ public class MapsActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getSupportFragmentManager()
                         .findFragmentById(R.id.map);
@@ -41,39 +42,40 @@ public class MapsActivity extends FragmentActivity implements
                         String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                 PackageManager.PERMISSION_GRANTED);
     }
-
     @Override
     public void onMapReady (GoogleMap googleMap){
         mMap = googleMap;
-
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new
+                MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location)
             {
-                latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.clear(); // Clear existing markers
-                mMap.addMarker(new MarkerOptions().position(latLng).title("My position"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                latLng = new
+                        LatLng(location.getLatitude(),location.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(latLng
+                ).title("My position"));
 
-                // Optional: Add this if you want to stop listening to location updates after getting one
-                locationManager.removeUpdates(locationListener);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         };
+        locationManager = (LocationManager)
+                getSystemService(LOCATION_SERVICE);
+        try{
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        try {
-            // Request location updates using GPS_PROVIDER
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME, MIN_DIST, locationListener);
-        } catch (SecurityException e) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME,MIN_DIST,locationListener);}
+        catch (SecurityException e){
             e.printStackTrace();
         }
     }
-
-
 }
 
 
 manifest.xml
+
 
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -96,11 +98,10 @@ manifest.xml
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDM7YWa_JXLNt5u7wBQEZktlYCH1v5IVJY" />
+            android:value="AIzaSyC18ydU494uxTDaPgc72EzL1eSAvokDf0w" />
         <activity
             android:name=".MapsActivity"
-            android:exported="true"
-            android:label="@string/app_name">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"
@@ -109,6 +110,7 @@ manifest.xml
         </activity>
     </application>
 </manifest>
+
 
 
 activity_maps.xml
@@ -121,7 +123,7 @@ activity_maps.xml
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MapsActivity2" />
+    tools:context=".MapsActivity" />
 
 
 activity_main.xml
