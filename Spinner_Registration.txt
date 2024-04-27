@@ -278,3 +278,23 @@ manifest.xml
     
     
     </manifest>
+
+
+
+
+values/string.xml
+
+<resources><string name="app_name">Kanchan_Lab4</string>
+    <string-array name="sub_name">
+        <item>
+            Jalgaon
+        </item>
+
+        <item>
+            Amravati
+        </item>
+        <item>
+            Beed
+        </item>
+    </string-array>
+</resources>
